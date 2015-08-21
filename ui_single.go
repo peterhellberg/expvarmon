@@ -26,30 +26,55 @@ func (t *TermUISingle) Init(data UIData) error {
 	t.Sparklines = make(map[VarName]*termui.Sparkline)
 
 	termui.UseTheme("helloworld")
+	theme := termui.Theme()
+	theme.BodyBg = termui.ColorDefault
+	theme.BlockBg = termui.ColorDefault
+	theme.BorderBg = termui.ColorDefault
+	theme.BorderFg = termui.ColorBlack
+	theme.BorderLabelTextBg = termui.ColorDefault
+	theme.BorderLabelTextFg = termui.ColorCyan
+	theme.ListItemBg = termui.ColorDefault
+	theme.ParTextBg = termui.ColorDefault
+	termui.SetTheme(theme)
 
 	t.Title = func() *termui.Par {
 		p := termui.NewPar("")
 		p.Height = 3
+		p.BgColor = termui.ColorDefault
+		p.TextBgColor = termui.ColorDefault
 		p.TextFgColor = termui.ColorWhite
 		p.Border.Label = "Services Monitor"
-		p.Border.FgColor = termui.ColorCyan
+		p.Border.LabelBgColor = termui.ColorDefault
+		p.Border.LabelFgColor = termui.ColorCyan
+		p.Border.FgColor = termui.ColorBlack
+		p.Border.BgColor = termui.ColorDefault
 		return p
 	}()
 	t.Status = func() *termui.Par {
 		p := termui.NewPar("")
 		p.Height = 3
+		p.BgColor = termui.ColorDefault
+		p.TextBgColor = termui.ColorDefault
 		p.TextFgColor = termui.ColorWhite
 		p.Border.Label = "Status"
-		p.Border.FgColor = termui.ColorCyan
+		p.Border.LabelBgColor = termui.ColorDefault
+		p.Border.LabelFgColor = termui.ColorCyan
+		p.Border.FgColor = termui.ColorBlack
+		p.Border.BgColor = termui.ColorDefault
 		return p
 	}()
 
 	t.Pars = make([]*termui.Par, len(data.Vars))
 	for i, name := range data.Vars {
 		par := termui.NewPar("")
+		par.BgColor = termui.ColorDefault
 		par.TextFgColor = colorByKind(name.Kind())
+		par.TextBgColor = termui.ColorDefault
+		par.Border.FgColor = termui.ColorBlack
+		par.Border.BgColor = termui.ColorDefault
 		par.Border.Label = name.Short()
-		par.Border.LabelFgColor = termui.ColorGreen
+		par.Border.LabelFgColor = termui.ColorCyan
+		par.Border.LabelBgColor = termui.ColorDefault
 		par.Height = 3
 		t.Pars[i] = par
 	}
@@ -58,6 +83,7 @@ func (t *TermUISingle) Init(data UIData) error {
 	for _, name := range data.Vars {
 		spl := termui.NewSparkline()
 		spl.Height = 1
+
 		spl.TitleColor = colorByKind(name.Kind())
 		spl.LineColor = colorByKind(name.Kind())
 		spl.Title = name.Long()
@@ -68,7 +94,12 @@ func (t *TermUISingle) Init(data UIData) error {
 		s := termui.NewSparklines(sparklines...)
 		s.Height = 2*len(sparklines) + 2
 		s.HasBorder = true
+		s.BgColor = termui.ColorDefault
+		s.Border.FgColor = termui.ColorBlack
+		s.Border.BgColor = termui.ColorDefault
 		s.Border.Label = fmt.Sprintf("Monitoring")
+		s.Border.LabelFgColor = termui.ColorCyan
+		s.Border.LabelBgColor = termui.ColorDefault
 		return s
 	}()
 

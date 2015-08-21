@@ -25,13 +25,24 @@ func (t *TermUI) Init(data UIData) error {
 	}
 
 	termui.UseTheme("helloworld")
+	theme := termui.Theme()
+	theme.BodyBg = termui.ColorDefault
+	theme.BlockBg = termui.ColorDefault
+	theme.BorderBg = termui.ColorDefault
+	theme.BorderFg = termui.ColorBlack
+	theme.BorderLabelTextBg = termui.ColorDefault
+	theme.BorderLabelTextFg = termui.ColorCyan
+	theme.ListItemBg = termui.ColorDefault
+	theme.ParTextBg = termui.ColorDefault
+
+	termui.SetTheme(theme)
 
 	t.Title = func() *termui.Par {
 		p := termui.NewPar("")
 		p.Height = 3
 		p.TextFgColor = termui.ColorWhite
 		p.Border.Label = "Services Monitor"
-		p.Border.FgColor = termui.ColorCyan
+		p.Border.FgColor = termui.ColorBlack
 		return p
 	}()
 	t.Status = func() *termui.Par {
@@ -39,13 +50,14 @@ func (t *TermUI) Init(data UIData) error {
 		p.Height = 3
 		p.TextFgColor = termui.ColorWhite
 		p.Border.Label = "Status"
-		p.Border.FgColor = termui.ColorCyan
+		p.Border.LabelFgColor = termui.ColorCyan
+		p.Border.FgColor = termui.ColorBlack
 		return p
 	}()
 	t.Services = func() *termui.List {
 		list := termui.NewList()
-		list.ItemFgColor = termui.ColorGreen
-		list.Border.LabelFgColor = termui.ColorGreen | termui.AttrBold
+		list.ItemFgColor = termui.ColorYellow
+		list.Border.LabelFgColor = termui.ColorCyan | termui.AttrBold
 		list.Border.Label = "Services"
 		list.Height = len(data.Services) + 2
 		return list
@@ -56,10 +68,7 @@ func (t *TermUI) Init(data UIData) error {
 		list := termui.NewList()
 		list.ItemFgColor = colorByKind(name.Kind())
 		list.Border.Label = name.Short()
-		list.Border.LabelFgColor = termui.ColorGreen
-		if i < 2 {
-			list.Border.LabelFgColor = termui.ColorGreen | termui.AttrBold
-		}
+		list.Border.LabelFgColor = termui.ColorCyan
 		list.Height = len(data.Services) + 2
 		t.Lists[i] = list
 	}
@@ -69,6 +78,7 @@ func (t *TermUI) Init(data UIData) error {
 		for _, service := range data.Services {
 			spl := termui.NewSparkline()
 			spl.Height = 1
+			spl.TitleColor = termui.ColorGreen
 			spl.LineColor = termui.ColorGreen
 			spl.Title = service.Name
 			sparklines = append(sparklines, spl)
@@ -222,12 +232,12 @@ func StatusLine(s *Service) string {
 func colorByKind(kind VarKind) termui.Attribute {
 	switch kind {
 	case KindMemory:
-		return termui.ColorRed | termui.AttrBold
+		return termui.ColorGreen | termui.AttrBold
 	case KindDuration:
 		return termui.ColorYellow | termui.AttrBold
 	case KindString:
-		return termui.ColorGreen | termui.AttrBold
+		return termui.ColorWhite | termui.AttrBold
 	default:
-		return termui.ColorBlue | termui.AttrBold
+		return termui.ColorMagenta | termui.AttrBold
 	}
 }
